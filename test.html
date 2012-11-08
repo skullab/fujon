@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>fujon - test</title>
+  <script>
+		// calculate difference between zero and window.onload
+		var now = new Date();
+		window.onload = function() {
+			document.getElementById("ms").innerHTML = (new Date()).getTime() - now.getTime() + ' ms'; 	
+		}
+	</script> 
+	
+  <script src="fujon-main-rc5.js" library="dependencies" callback="main"></script>
+  
+  <script src="fujon-test.js"></script>
+  
+  </head>
+  <body>
+    
+    <div id="box1"></div>
+    <div id="box2"></div>
+    
+    
+   <div id="sandbox">
+   	Time loaded...
+   	<h3><div id="ms"></div></h3>
+   </div>
+  </body>
+</html>
