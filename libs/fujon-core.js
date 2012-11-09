@@ -35,6 +35,7 @@ fujon.core = {
     toString: function(){
         return 'fujon.core';
     },
+    version: '1.0',
     typifies: function(type,value){
       var control;
       switch(type){
@@ -375,17 +376,28 @@ fujon.core.Element = new fujon.core.Class({
     getElementObject: function(){
       return this.elementObject ;
     },
-    //TODO problema sui set listener
     clone: function(obj){
       if(obj instanceof fujon.core.Element){
+        this.elementObject = obj.elementObject.cloneNode(true);
         for(var property in obj){
           if(!fujon.core.isFunction(obj[property])){
-            this[property] = obj[property];
-            //alert(property + ' : '+this[property])
+            if(property != 'elementObject'){
+              this[property] = obj[property];
+            }
+            
+            if(property.search('Listener') != -1){
+               if(this[property] != null){
+                var listener = property.substr(0,1).toUpperCase() + property.substr(1);
+                var setter = 'setOn'+listener ;
+                this[setter](this[property]);
+               }
+            }
+            
           }
         }
-        this.elementObject = document.createElement(obj.typeElement);
       }else throw ERROR.CORE.IllegalTypeAssignment ;
+      
+      return this ;
     },
     create: function(type){
       if(type != null){

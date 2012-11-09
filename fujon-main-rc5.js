@@ -8,7 +8,7 @@
  */
 
 var fujon = {
-	version : 'rc5',
+	versionName : 'rc5',
 	versionCode : '0.5.3',
 	revision : '7/11/2012',
 	author : 'Ivan Maruca',
@@ -139,7 +139,7 @@ var fLibs = new function() {
 /** ************************************************************************ */
 (function() {
 	var scripts = document.getElementsByTagName('script');
-	var mainFile = 'fujon-main-' + fujon.version + '.js';
+	var mainFile = 'fujon-main-' + fujon.versionName + '.js';
 	var lib ;
 	var callback ;
 	
