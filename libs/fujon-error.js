@@ -13,32 +13,32 @@
  *------------------------------------------**/
 var ERROR = {
     CORE:{
-        IllegalTypeAssignment: new Error('CORE : IllegalTypeAssignment',fujon.filename),
-        IllegalInterfaceMethod : new Error('CORE.INTERFACE : You must override all and only methods of Interface',fujon.filename)
+        IllegalTypeAssignment: new Error('CORE : IllegalTypeAssignment'),
+        IllegalInterfaceMethod : new Error('CORE.INTERFACE : You must override all and only methods of Interface')
     },
     LIBRARY:{
-        package: new Error('LIBRARY : Try to import undefined package',fujon.filename),
-        toStringNotOverride: new Error('LIBRARY : Error with package ! You must override toString() function into your own package',fujon.filename)
+        package: new Error('LIBRARY : Try to import undefined package'),
+        toStringNotOverride: new Error('LIBRARY : Error with package ! You must override toString() function into your own package')
     },
     RUNNABLE:{
-        unset:new Error('RUNNABLE : Function parsed unset',fujon.filename),
-        resume:new Error('RUNNABLE : Impossible to resume runner',fujon.filename)
+        unset:new Error('RUNNABLE : Function parsed unset'),
+        resume:new Error('RUNNABLE : Impossible to resume runner')
     },
     THREAD:{
-        notRunnable:new Error('THREAD : Non-Runnable Thread',fujon.filename),
-        IllegalThreadStateException:new Error('THREAD : IllegalThreadStateException',fujon.filename)
+        notRunnable:new Error('THREAD : Non-Runnable Thread'),
+        IllegalThreadStateException:new Error('THREAD : IllegalThreadStateException')
     },
     GENERATOR:{
-        StopIteration:new Error('GENERATOR : StopIteration',fujon.filename),
-        _throw:new Error('GENERATOR : Throw an undefined error',fujon.filename)
+        StopIteration:new Error('GENERATOR : StopIteration'),
+        _throw:new Error('GENERATOR : Throw an undefined error')
     },
     GEOTOOLS:{
         GEOLOCATION:{
-            noSupport: new Error('GEOLOCATION: Geolocation is not supported for this browser',fujon.filename),
-            callbackUnset: new Error('GEOLOCATION: Request position without callback function',fujon.filename)
+            noSupport: new Error('GEOLOCATION: Geolocation is not supported for this browser'),
+            callbackUnset: new Error('GEOLOCATION: Request position without callback function')
         },
         EASYMAPS:{
-            createWithInvalidOption: new Error('GEOTOOLS.EASYMAPS : Try to create a map without valid arguments',fujon.filename)
+            createWithInvalidOption: new Error('GEOTOOLS.EASYMAPS : Try to create a map without valid arguments')
         }
     }
 }

@@ -1,7 +1,36 @@
 function main(){	
 	fImport(fujon.core);
+	fImport(fujon.core.thread);
 	fImport(fujon.shortcuts);
 	//alert(Element.HEAD.innerHTML);
+  var i = 0 ;
+  
+  
+  var t = new Thread();
+  
+  var f = function(){
+	  alert('I\'m a function inside a Thread');
+  };
+  
+  var i = 0 ;
+  var loop = function(){
+	 ('I\'m a loop inside a Thread ! '+i);
+	  return CONTINUE ;
+  };
+  var r = new Runnable({
+	  run:function(){
+		  alert('I\'m a runnable interface inside a Thread !');
+	  }
+  });
+  
+  t.setRunnable(loop);
+  
+  
+  try{ 
+	  t_ref = t.start();
+  }catch(e){
+	  alert(e);
+  }
   
   var e1 = new Element('div');
   
