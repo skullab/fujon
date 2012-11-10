@@ -19,10 +19,6 @@ fujon.constants = {
   LOAD:'load',
   TYPE: {NUMBER:'number',STRING:'string',BOOLEAN:'boolean',OBJECT:'object',FUNCTION:'function'},
   BROWSER:{FIREFOX:'Firefox',OPERA:'Opera',MSIE:'MSIE',CHROME:'Chrome',SAFARI:'Safari',NETSCAPE:'Netscape',KONQUEROR:'Konqueror',AOL:'AOL',SEAMONKEY:'SeaMonkey'},
-  OBJECT:{PROTOTYPE:{FUNCTIONS:{
-                        getSize:'getSize',
-                        isNotPrototypeFunction:'isNotPrototypeFunction'
-  }}},
   SIGNATURE:{DEBUG:'debug',UNSIGNED:''}
 }
 fPackage.create(fujon.constants);  

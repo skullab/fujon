@@ -142,29 +142,21 @@ var fLibs = new function() {
 	var mainFile = 'fujon-main-' + fujon.versionName + '.js';
 	var lib ;
 	var callback ;
-	
+	var dep = 'dependencies' ;
+  
 	for ( var i = 0; i < scripts.length; i++) {
-		if (scripts[i].getAttribute('src') == mainFile) {
+		if (scripts[i].getAttribute('src').search(mainFile) != -1) {
 			//search for library attribute
 			if (scripts[i].getAttribute('library') != undefined) {
 				lib = scripts[i].getAttribute('library');
-				/*fLibs.setBaseLibrary(fujon.baseLibrary);
-				switch (lib) {
-				case 'dependencies':
-					fLibs.load(fujon.dependencies);
-					break;
-				default:
-					fLibs.load(lib);
-				}*/
 			}
 			//search for callback attribute
 			if(scripts[i].getAttribute('callback') != undefined){
 				callback = scripts[i].getAttribute('callback') ;
 			}
-			
+			 
 			//fire load request
-			if(lib){
-				
+			if(lib){	 
 				switch (lib) {
 				case 'dependencies':
 					fLibs.setBaseLibrary(fujon.baseLibrary);
@@ -177,8 +169,35 @@ var fLibs = new function() {
 						fLibs.load(lib,setTimeout(callback+'()',50));
 					}else fLibs.load(lib);
 				}
-				
 			}
+      
+      var ignoreLib ;
+      var libToLoad = new Array();
+      // new method of fire load request
+      if(lib){
+        var libPat = /[a-zA-Z0-9-]+(.js)/gi
+        var searchForIgnore = /dependencies\!\((([a-zA-Z0-9-]+(.js)),?)+\)/gi ;
+        //search for dependencies
+        if(lib.search(dep) != -1){
+          var ignore = lib.match(searchForIgnore);
+          if(ignore){
+             ignoreLib = ignore[0].match(libPat) ;
+          }else alert('no ignore');
+          
+          alert(ignoreLib);
+          
+          libToLoad = fujon.dependencies ;
+          
+          for(var i in ignoreLib){
+            var y = fujon.dependencies.indexOf(ignoreLib[i]);
+            libToLoad.splice(fujon.dependencies.indexOf(ignoreLib[i]),1);
+          }
+          
+          alert(libToLoad);
+        }
+        
+      }
+      
 		}
 	}
 })();
