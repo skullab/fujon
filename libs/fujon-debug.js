@@ -11,6 +11,7 @@
 DEBUG
  -----------------------------------------*/
  
+ var consoleTest = 'testing';
 fujon.debug = {
   toString: function(){
     return 'fujon.debug' ;
@@ -20,20 +21,21 @@ fujon.debug = {
     	//safe debug mode
     	if(fujon.signature != fujon.constants.SIGNATURE.DEBUG)return;
     	this.console = window.open('libs/console/console.html','fujonConsole','location=no,menubar=no,status=no,titlebar=no,toolbar=no');
-    	alert(this.console);
     	this.console.resizeTo(screen.width,150);
     	this.console.moveTo(0,screen.height-150);
     	this.boardName = 'board' ;
     	this.infoName = 'info' ;
-    	this.console.blur();
+	this.document = this.console.document ;
+    	this.board = this.document.getElementById(this.boardName);
+	this.consoleInfo = this.console.document.getElementById(this.infoName) ;
+	this.info();
     },
     info: function(){
-    	this.consoleInfo = this.console.document.getElementById(this.infoName) ;
     	this.consoleInfo.innerHTML = 'Console ver '+fujon.versionCode ;
     },
     log: function(msg,type){
-    	//this.console.focus();
-    	var msgStyle = 'd_msg' ;
+    	this.console.focus();
+    	var msgStyle ;
     	switch(type){
     	case 'e' :
     		msgStyle = 'e_msg' ;
@@ -47,16 +49,17 @@ fujon.debug = {
     	case 'v' :
     		msgStyle = 'v_msg' ;
     		break;
+	default :
+		msgStyle = 'd_msg' ;
     	}
     	
     	//this.consoleBoard = this.console.document.getElementById(this.boardName) ;
     	var now = new Date();
     	var timestamp = now.getHours()+':'+now.getMinutes()+':'+now.getSeconds()+':'+now.getMilliseconds() ;
-    	/*this.consoleBoard.innerHTML += 
+	
+    	this.board.innerHTML += 
     		'<span class="date">'+timestamp+ 
-    		' : </span><span class="'+msgStyle+'">'+msg+'</span><br>';*/
-    	
-    	this.queue(timestamp,msgStyle,msg);
+    		' : </span><span class="'+msgStyle+'">'+msg+'</span><br>';
     },
     activeConsole:function(){
     	var _this = this ;
@@ -65,19 +68,8 @@ fujon.debug = {
     	},0);
     },
     queue: function(t,s,m){
-    	var _this = this ;
-    	if(!this.console.focus)this.console.focus();
+	var _this = this ;
     	
-    	/*this.console.document.onreadystatechange = function() {
-    		alert('on ready');
-    		if (document.readyState == "complete") {
-    			alert('doc complete');
-    			_this.consoleBoard = _this.console.document.getElementById(_this.boardName);
-        		_this.consoleBoard.innerHTML += 
-        			'<span class="date">'+t+ 
-        			' : </span><span class="'+s+'">'+m+'</span><br>';
-    		}
-    	}*/
     }
   })  
 };
