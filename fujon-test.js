@@ -1,5 +1,7 @@
-function main(){
-  //fLibs.load('fujon-debug.js');	
+function main() {
 	fImport(fujon.core);
-  fImport(fujon.shortcuts);
+	fImport(fujon.debug);
+	
+	c = new Console();
+	c.log('this is a message to output console');
 }

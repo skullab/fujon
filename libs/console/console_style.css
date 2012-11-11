@@ -1,0 +1,26 @@
+
+.info{
+	font:10px monospace;
+	width:100%;
+}
+.board{
+	font:12px monospace;
+	width:100%;
+	height:100px;
+	overflow:auto;
+}
+span.date{
+	color:#666666;
+}
+span.w_msg{
+	color:#b26e03;
+}
+span.e_msg{
+	color:#b21602;
+}
+span.d_msg{
+	color:#019db2;
+}
+span.v_msg{
+	color:#000000;
+}
