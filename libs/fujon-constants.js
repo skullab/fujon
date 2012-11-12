@@ -11,7 +11,7 @@
 /**-------------------------------------------
  *            CONSTANTS
  *------------------------------------------**/ 
-  
+//alert('fire cons');  
 fujon.constants = {
   toString: function(){
     return 'fujon.constants' ;

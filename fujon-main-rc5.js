@@ -17,8 +17,12 @@ var fujon = {
 	tree : {},
 	/* dependencies */
 	baseLibrary : 'libs/',
-	dependencies : [ 'fujon-error.js', 'fujon-constants.js',
-			'fujon-shortcuts.js', 'fujon-core.js', 'fujon-debug.js' ]
+	dependencies : [ 'fujon-core.js',
+	                 'fujon-error.js', 
+	                 'fujon-constants.js',
+	                 'fujon-shortcuts.js',  
+	                 'fujon-content.js',
+	                 'fujon-debug.js' ]
 };
 /** ************************************************************************ */
 /**
@@ -90,7 +94,9 @@ var fLibs = new function() {
 			}
 			this.reset();
 		} else {
-			this.append(file[currentStack]);
+			setTimeout(function(){
+				_this.append(file[currentStack]);
+			},50);
 		}
 
 	};
@@ -104,6 +110,7 @@ var fLibs = new function() {
 	};
 	this.append = function(file) {
 		var lib = document.createElement('script');
+		lib.type = 'text/javascript' ;
 		lib.src = this.root + file;
 		head.appendChild(lib);
 		currentStack++;

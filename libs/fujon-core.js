@@ -1,5 +1,6 @@
 /**
  * THE FUJON JAVASCRIPT FRAMEWORK ! Copyright(c)2005-2012 Released under Apache
+
  * License Version 2.0, January 2004 (see the license here :
  * http://www.apache.org/licenses/LICENSE-2.0.txt)
  * 
@@ -10,6 +11,7 @@
 /*----------------------------------------
  CORE
  -----------------------------------------*/
+//alert('fire core');  
 fujon.core = {
 	toString : function() {
 		return 'fujon.core';
@@ -106,8 +108,6 @@ fujon.core = {
 		}
 	}
 };
-
-fPackage.create(fujon.core);
 /*----------------------------------------
  CORE
  +> OnDocumentReady
@@ -928,3 +928,5 @@ fujon.core.thread.Thread.prototype = {
 
 	}
 };
+
+fPackage.create(fujon.core);

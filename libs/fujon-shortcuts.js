@@ -11,7 +11,7 @@
 /**-------------------------------------------
  *            SHORTCUTS
  *------------------------------------------**/ 
-           
+//alert('fire shortcuts'); 
 fujon.shortcuts = {
   toString: function(){
     return 'fujon.shortcuts' ;
@@ -22,5 +22,5 @@ fujon.shortcuts = {
   tag: function(tag){
     return document.getElementsByTagName(tag);
   }
-}
+};
 fPackage.create(fujon.shortcuts); 
