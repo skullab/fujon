@@ -19,6 +19,7 @@ fujon.constants = {
   LOAD:'load',
   TYPE: {NUMBER:'number',STRING:'string',BOOLEAN:'boolean',OBJECT:'object',FUNCTION:'function'},
   BROWSER:{FIREFOX:'Firefox',OPERA:'Opera',MSIE:'MSIE',CHROME:'Chrome',SAFARI:'Safari',NETSCAPE:'Netscape',KONQUEROR:'Konqueror',AOL:'AOL',SEAMONKEY:'SeaMonkey'},
-  SIGNATURE:{DEBUG:'debug',UNSIGNED:''}
+  SIGNATURE:{DEBUG:'debug',UNSIGNED:''},
+  CONSOLE:{NAME:'fujonConsole'}
 }
 fPackage.create(fujon.constants);  

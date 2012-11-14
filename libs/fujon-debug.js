@@ -20,7 +20,7 @@ fujon.debug = {
     	this.activateConsole();
     },
     initialize: function(){
-    	this.console = window.open('','fujonConsole','location=no,menubar=no,status=no,titlebar=no,toolbar=no');
+    	this.console = window.open('',fujon.constants.CONSOLE.NAME,'location=no,menubar=no,status=no,titlebar=no,toolbar=no');
     	this.console.resizeTo(screen.width,200);
     	this.console.moveTo(0,screen.height-200);
     	this.console.document.write(this.UI);
@@ -29,24 +29,35 @@ fujon.debug = {
     	'<style type="text/css">'+ 
     	'.info{font:10px monospace;width:100%;margin-bottom:5px;}'+
     	'.board{font:12px monospace;width:100%;height:100px;overflow:auto;}'+
+	'.optionbar{font:12px monospace;position:relative;float:right;top:-20px}'+
     	'span.date{color:#666666;}'+
     	'span.w_msg{color:#b26e03;}'+
     	'span.e_msg{color:#b21602;}'+
     	'span.d_msg{color:#019db2;}'+
     	'span.v_msg{color:#000000;}'+
+	'span.filter_e,span.filter_w,span.filter_d,span.filter_v{color:#ff0000;cursor:pointer;}'+
     	'</style>'+
     	'<script>'+
-    	'function print(t,s,m){'+
+    	'function flush(t,s,m){'+
     	'	var board = document.getElementById(\'board\');'+
     	'	board.innerHTML += \'<span class="date">\'+t+\' : '+ 
 		' 	</span><span class="\'+s+\'">\'+m+\'</span><br>\';'+
 		'	board.scrollTop = board.scrollHeight ;'+
-    	'}'+
+    	'};'+
+	'function filter(f){'+
+	'};'+
     	'</script>'+
     	'</head><body>'+
     	'<div id="info" class="info">Console ver '+fujon.versionCode+'</div>'+
+	'<div id="optionbar" class="optionbar">Filter : '+
+	'<span id="filter_e" class="filter_e" onclick="filter(\'e\')">[E]</span>'+
+	'<span id="filter_w" class="filter_w">[W]</span>'+
+	'<span id="filter_d" class="filter_d">[D]</span>'+
+	'<span id="filter_v" class="filter_v">[V]</span>'+
+	'</div>'+
     	'<div id="board" class="board"></div>'+
     	'</body></html>',
+    test:function(){alert('test')},
     verify: function(){
     	//safe debug mode
     	return (fujon.signature == fujon.constants.SIGNATURE.DEBUG) ;
@@ -72,11 +83,9 @@ fujon.debug = {
     		msgStyle = 'd_msg' ;
     	}
     	
-    	
     	var now = new Date();
     	var timestamp = now.getHours()+':'+now.getMinutes()+':'+now.getSeconds()+':'+now.getMilliseconds() ;
-    	
-    	this.console.print(timestamp,msgStyle,msg);
+    	this.console.flush(timestamp,msgStyle,msg);
     },
     deactivateConsole:function(){
     	if(this.console){
