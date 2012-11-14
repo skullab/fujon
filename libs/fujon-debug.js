@@ -29,31 +29,42 @@ fujon.debug = {
     	'<style type="text/css">'+ 
     	'.info{font:10px monospace;width:100%;margin-bottom:5px;}'+
     	'.board{font:12px monospace;width:100%;height:100px;overflow:auto;}'+
-	'.optionbar{font:12px monospace;position:relative;float:right;top:-20px}'+
+	    '.optionbar{font:12px monospace;position:relative;float:right;top:-20px}'+
     	'span.date{color:#666666;}'+
     	'span.w_msg{color:#b26e03;}'+
     	'span.e_msg{color:#b21602;}'+
     	'span.d_msg{color:#019db2;}'+
     	'span.v_msg{color:#000000;}'+
-	'span.filter_e,span.filter_w,span.filter_d,span.filter_v{color:#ff0000;cursor:pointer;}'+
+	    'span.filter_e,span.filter_w,span.filter_d,span.filter_v{color:#000000;cursor:pointer;}'+
     	'</style>'+
     	'<script>'+
+      'var filters = new Array(4);'+
+      'filters["e"] = filters["w"] = filters["d"] = filters["v"] = 1 ;'+
     	'function flush(t,s,m){'+
+      ' var f = s.split("_")[0] ;'+
+      ' if(!filters[f])return;'+
     	'	var board = document.getElementById(\'board\');'+
     	'	board.innerHTML += \'<span class="date">\'+t+\' : '+ 
-		' 	</span><span class="\'+s+\'">\'+m+\'</span><br>\';'+
-		'	board.scrollTop = board.scrollHeight ;'+
+		  ' 	</span><span class="\'+s+\'">\'+m+\'</span><br>\';'+
+		  '	board.scrollTop = board.scrollHeight ;'+
     	'};'+
-	'function filter(f){'+
-	'};'+
+	    'function filter(f){'+
+      ' filters[f] = filters[f] ? 0 : 1 ;'+
+      ' var el = document.getElementById("filter_"+f);'+
+      ' if(el.style.color != "rgb(255, 0, 0)"){'+
+      '   el.style.color = "rgb(255, 0, 0)" ;'+
+      ' }else{'+
+      '   el.style.color = "rgb(0, 0, 0)" ;'+
+      ' }'+
+	    '};'+
     	'</script>'+
     	'</head><body>'+
     	'<div id="info" class="info">Console ver '+fujon.versionCode+'</div>'+
 	'<div id="optionbar" class="optionbar">Filter : '+
 	'<span id="filter_e" class="filter_e" onclick="filter(\'e\')">[E]</span>'+
-	'<span id="filter_w" class="filter_w">[W]</span>'+
-	'<span id="filter_d" class="filter_d">[D]</span>'+
-	'<span id="filter_v" class="filter_v">[V]</span>'+
+	'<span id="filter_w" class="filter_w" onclick="filter(\'w\')">[W]</span>'+
+	'<span id="filter_d" class="filter_d" onclick="filter(\'d\')">[D]</span>'+
+	'<span id="filter_v" class="filter_v" onclick="filter(\'v\')">[V]</span>'+
 	'</div>'+
     	'<div id="board" class="board"></div>'+
     	'</body></html>',
