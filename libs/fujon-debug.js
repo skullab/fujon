@@ -18,6 +18,7 @@ fujon.debug = {
   Console: new fujon.core.Class({
     constructor: function(){
     	this.activateConsole();
+      this.blurforced = false ;
     },
     initialize: function(){
     	this.console = window.open('',fujon.constants.CONSOLE.NAME,'location=no,menubar=no,status=no,titlebar=no,toolbar=no');
@@ -69,7 +70,7 @@ fujon.debug = {
     	'<div id="board" class="board"></div>'+
     	'</body></html>',
     close:function(){
-	this.console.close() ;
+	   this.console.close() ;
       },
     verify: function(){
     	//safe debug mode
@@ -96,9 +97,13 @@ fujon.debug = {
     		msgStyle = 'd_msg' ;
     	}
     	
+      msg = msg.replace(/(<br>)/gi,'<br>+------------> ');
     	var now = new Date();
     	var timestamp = now.getHours()+':'+now.getMinutes()+':'+now.getSeconds()+':'+now.getMilliseconds() ;
     	this.console.flush(timestamp,msgStyle,msg);
+    },
+    forceBlur:function(v){
+      this.blurforced = v ;
     },
     deactivateConsole:function(){
     	if(this.console){
@@ -111,7 +116,7 @@ fujon.debug = {
     	if(!this.console || this.console.closed){
     		this.initialize();
     	}
-    	this.console.focus();
+    	if(!this.blurforced)this.console.focus();
     	return true ;
     },
     static$E:'e',

@@ -9,8 +9,8 @@
 
 var fujon = {
 	versionName : 'rc5',
-	versionCode : '0.5.4',
-	revision : '9/11/2012',
+	versionCode : '0.5.5',
+	revision : '15/11/2012',
 	author : 'Ivan Maruca',
 	signature : 'debug',
 	/* the FUJON tree packages */
