@@ -21,8 +21,8 @@ fujon.debug = {
     },
     initialize: function(){
     	this.console = window.open('',fujon.constants.CONSOLE.NAME,'location=no,menubar=no,status=no,titlebar=no,toolbar=no');
-    	this.console.resizeTo(screen.width,200);
-    	this.console.moveTo(0,screen.height-200);
+    	this.console.resizeTo(screen.width,210);
+    	this.console.moveTo(0,screen.height-210);
     	this.console.document.write(this.UI);
     },
     UI:'<!DOCTYPE html><html><head><meta charset="utf-8"><title>Fujon Output Console</title>'+
@@ -35,7 +35,7 @@ fujon.debug = {
     	'span.e_msg{color:#b21602;}'+
     	'span.d_msg{color:#019db2;}'+
     	'span.v_msg{color:#000000;}'+
-	    'span.filter_e,span.filter_w,span.filter_d,span.filter_v{color:#000000;cursor:pointer;}'+
+	    'span.filter_e,span.filter_w,span.filter_d,span.filter_v{color:#ff0000;cursor:pointer;}'+
     	'</style>'+
     	'<script>'+
       'var filters = new Array(4);'+
@@ -51,10 +51,10 @@ fujon.debug = {
 	    'function filter(f){'+
       ' filters[f] = filters[f] ? 0 : 1 ;'+
       ' var el = document.getElementById("filter_"+f);'+
-      ' if(el.style.color != "rgb(255, 0, 0)"){'+
-      '   el.style.color = "rgb(255, 0, 0)" ;'+
+      ' if(el.style.color == "rgb(255, 0, 0)" || el.style.color == ""){'+
+      '   el.style.color = "rgb(102,102,102)" ;'+
       ' }else{'+
-      '   el.style.color = "rgb(0, 0, 0)" ;'+
+      '   el.style.color = "rgb(255, 0, 0)" ;'+
       ' }'+
 	    '};'+
     	'</script>'+
@@ -68,7 +68,9 @@ fujon.debug = {
 	'</div>'+
     	'<div id="board" class="board"></div>'+
     	'</body></html>',
-    test:function(){alert('test')},
+    close:function(){
+	this.console.close() ;
+      },
     verify: function(){
     	//safe debug mode
     	return (fujon.signature == fujon.constants.SIGNATURE.DEBUG) ;
