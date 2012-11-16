@@ -1,14 +1,23 @@
-var c ;
 function main() {
-	
+  alert('libraries load');
 	fImport(fujon.core);
-	fImport(fujon.debug);
-	
-	c = new Console();
-  c.forceBlur(true);
+	fImport(fujon.shortcuts);
+  fImport(fujon.debug);
+  
+  var a = Element.convert(get('box'));
+  console.log(a.getAttribute('id'));
+  a.setOnClickListener(new OnClickListener({
+    onClick:function(e,ev){
+      alert(e);
+    }
+  }));
 }
 
-function message(type){
-	c.log('this is a message to output console<br>with more lines<br>to test functionality',type);
-}
+onDocumentReady(function(){
+  alert('document ready'); 
+});
+onWindowLoad(function(){
+  alert('window load');
+});
+
 

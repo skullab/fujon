@@ -236,13 +236,20 @@ var fLibs = new function() {
 	}
 })();
 /** ************************************************************************ */
-function Ready(callback) {
-	if (!callback)
-		return;
+function onDocumentReady(callback) {
+	if (typeof(callback) != 'function')return;
 	document.onreadystatechange = function() {
-		if (document.readyState == "complete") {
+		if (document.readyState === "complete") {
 			callback();
 		}
 	}
+}
+function onWindowLoad(callback){
+  if (typeof(callback) != 'function')return;
+  window.onload = callback ;
+}
+function onLibrariesLoad(callback){
+  if (typeof(callback) != 'function')return;
+  callback();
 }
 /** ************************************************************************ */

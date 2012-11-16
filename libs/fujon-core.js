@@ -114,7 +114,7 @@ fujon.core = {
  -----------------------------------------*/
 fujon.core.OnDocumentReady = function(callback) {
 	document.onreadystatechange = function() {
-		if (document.readyState == "complete") {
+		if (document.readyState === "complete") {
 			callback();
 		}
 	};
@@ -501,6 +501,14 @@ fujon.core.Element = new fujon.core.Class(
 					throw ERROR.CORE.IllegalTypeAssignment;
 				return this.elementObject.getAttribute(attr);
 			},
+      static$convert : function(obj){
+        if(fujon.core.isElement(obj)){
+          var converted = new fujon.core.Element(obj.tagName);
+          converted.elementObject = obj ;
+          return converted ;
+        }
+        return null ;
+      },
 			// ONLOAD ONLY !
 			static$HTML : document.getElementsByTagName('html')[0],
 			static$BODY : document.getElementsByTagName('body')[0],
