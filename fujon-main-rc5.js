@@ -6,7 +6,9 @@
  * Author : ivan[dot]maruca[at]gmail[dot]com <http://fujon.blogspot.com>
  * 
  */
-
+window.onload = function(){
+	fujon.windowisloaded = true ;
+};
 var fujon = {
 	versionName : 'rc5',
 	versionCode : '0.5.5',
@@ -22,6 +24,7 @@ var fujon = {
 	                 'fujon-constants.js',
 	                 'fujon-shortcuts.js',  
 	                 'fujon-content.js',
+	                 'fujon-app.js',
 	                 'fujon-debug.js' ]
 };
 /** ************************************************************************ */
@@ -96,7 +99,7 @@ var fLibs = new function() {
 		} else {
 			setTimeout(function(){
 				_this.append(file[currentStack]);
-			},50);
+			},0);
 		}
 
 	};
@@ -109,6 +112,7 @@ var fLibs = new function() {
 		}
 	};
 	this.append = function(file) {
+		//alert(file);
 		var lib = document.createElement('script');
 		lib.type = 'text/javascript' ;
 		lib.src = this.root + file;
@@ -249,6 +253,7 @@ function onWindowLoad(callback){
   window.onload = callback ;
 }
 function onLibrariesLoad(callback){
+	alert('lib load')
   if (typeof(callback) != 'function')return;
   callback();
 }
