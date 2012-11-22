@@ -76,7 +76,8 @@ fujon.debug = {
     	//safe debug mode
     	return (fujon.signature == fujon.constants.SIGNATURE.DEBUG) ;
     },
-    log: function(msg,type){
+    log: function(m,type){
+    	var msg = m.toString();
     	if(!this.activateConsole())return ;
     	var msgStyle ;
     	

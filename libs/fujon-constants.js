@@ -17,7 +17,7 @@ fujon.constants = {
     return 'fujon.constants' ;
   },
   LOAD:'load',
-  TYPE: {NUMBER:'number',STRING:'string',BOOLEAN:'boolean',OBJECT:'object',FUNCTION:'function'},
+  TYPE: {NUMBER:'number',STRING:'string',BOOLEAN:'boolean',OBJECT:'object',FUNCTION:'function',ARRAY:'array'},
   BROWSER:{FIREFOX:'Firefox',OPERA:'Opera',MSIE:'MSIE',CHROME:'Chrome',SAFARI:'Safari',NETSCAPE:'Netscape',KONQUEROR:'Konqueror',AOL:'AOL',SEAMONKEY:'SeaMonkey'},
   SIGNATURE:{DEBUG:'debug',UNSIGNED:''},
   CONSOLE:{NAME:'fujonConsole'}

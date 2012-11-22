@@ -16,7 +16,23 @@ fujon.core = {
 	toString : function() {
 		return 'fujon.core';
 	},
-	typifies : function(type, value) {
+	typifies : function(type){
+		switch (type) {
+		case fujon.constants.TYPE.NUMBER:
+			return 0 ;
+		case fujon.constants.TYPE.STRING:
+			return '';
+		case fujon.constants.TYPE.BOOLEAN:
+			return true;
+		case fujon.constants.TYPE.OBJECT:
+			return {};
+		case fujon.constants.TYPE.FUNCTION:
+			return function(){};
+		case fujon.constants.TYPE.ARRAY:
+			return new Array();
+		}
+	},
+	checkType : function(type, value) {
 		var control;
 		switch (type) {
 		case fujon.constants.TYPE.NUMBER:
@@ -82,11 +98,12 @@ fujon.core = {
 	getClientSize : function() {
 		return [ document.body.clientWidth, document.body.clientHeight ];
 	},
+	//TODO Mouse broke :-(
 	Mouse : {
 		toString : function() {
 			return 'fujon.core.Mouse';
 		},
-		position : function(e) {
+		position : function() {
 			var X = 0;
 			var Y = 0;
 			if (!e)
@@ -161,7 +178,8 @@ fujon.core.Class = function(object) {
 						}
 						primitive._super[extend_property] = object.extend[extend_property];
 					}
-				} else {
+					
+				}else {
 					// if(object[property] ==
 					// primitive._super[property])alert('override');
 					primitive.prototype[property] = object[property];
@@ -198,7 +216,7 @@ fujon.core.Interface = new fujon.core.Class(
 						if (abstract_property == 'implement') {
 							if (!fujon.core.isArray(object[abstract_property])
 									&& object[abstract_property] != '[object Interface]')
-								alert('error imple');
+								throw ERROR.CORE.InterfaceError ;
 							if (fujon.core.isArray(object[abstract_property])) {
 								for ( var i = 0; i < object[abstract_property].length; i++) {
 									if (object[abstract_property][i] != '[object Interface]')
@@ -360,8 +378,7 @@ fujon.core.ListenerManager = new function() {
 	this.addListener = function(elem, type, exp, state) {
 		// state true = capture o false = bubbling (default)
 		var state = state || false;
-		if (!fujon.core.Element.isValidElement(elem))
-			throw ERROR.CORE.IllegalTypeAssignment ;
+		//if (!fujon.core.Element.isValidElement(elem))throw ERROR.CORE.IllegalTypeAssignment ;
 		if (window.addEventListener) {
 			elem.addEventListener(type, exp, state);
 			return true;

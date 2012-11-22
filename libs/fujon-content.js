@@ -1,11 +1,14 @@
 //alert('fire content');
 fujon.content = {
-	toString: function(){
+	toString : function() {
 		return 'fujon.content';
 	},
-	Context: new function(){
-		this.window = window ;
-		this.document = document ;
-	}
+	Context : new fujon.core.Class({
+		constructor : function(obj) {
+			if (obj instanceof Object) {
+				this.prototype = obj;
+			}
+		},
+	})
 };
 fPackage.create(fujon.content);
