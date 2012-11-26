@@ -14,7 +14,8 @@ fujon.app.WebAppCallback = new fujon.core.Interface({
 	onCancel : function() {
 	}
 });
-
+fujon.app.BaseWebApp = new fujon.core.Class({
+});
 fujon.app.WebApp = new fujon.core.Class({
 	constructor : function(obj) {
 		if(obj instanceof fujon.app.WebAppCallback){

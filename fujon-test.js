@@ -1,34 +1,38 @@
-var out ;
+
 function main() {
-	// alert('libraries load');
 	fImport(fujon.core);
 	fImport(fujon.shortcuts);
 	fImport(fujon.debug);
 	fImport(fujon.app);
-
-	out = new Console();
 	
-	var wa = new WebApp(new WebAppCallback({
-		onReady : function() {
-			out.log('my app is ready');
+	var A = new Class2({
+		constructor:function(x,y){
+			console.log('constructor of A : '+x+' '+y);
+			this.x = x ;
+			this.y = y ;
 		},
-		onStart : function() {
-			out.log('my  app is started !');
-			out.log(wa.getContext());
-		},
-		onStop : function() {
-		},
-		onCancel : function() {
+		getX:function(){
+			return this.name+'- value of x is : '+this.x ;
 		}
-	}));
-
+	});
 	
-	var a = Element.convert(get('box'));
-	console.log(a.getAttribute('id'));
-	a.setOnClickListener(new OnClickListener({
-		onClick : function(e, ev) {
-			out.log(e);
-		}
-	}));
-
+	var B = new Class2({
+		constructor:function(x,y){
+			console.log('constructor of B : '+x+' '+y);
+			this._super.constructor(x,y);
+		},
+		extend:A,
+		name:'Class B'
+	});
+	
+	var b = new B(10,20);
+	console.log(b.getX());
+	
+	var a = new A(100,200);
+	console.log(a.getX());
+	
+	console.log(A);
+	console.log(B);
+	
+	
 }

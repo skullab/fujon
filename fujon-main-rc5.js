@@ -20,6 +20,7 @@ var fujon = {
 	/* dependencies */
 	baseLibrary : 'libs/',
 	dependencies : [ 'fujon-core.js',
+	                 'temp.js',
 	                 'fujon-error.js', 
 	                 'fujon-constants.js',
 	                 'fujon-shortcuts.js',  

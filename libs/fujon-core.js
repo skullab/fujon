@@ -153,49 +153,47 @@ fujon.core.Primitive.prototype = {
  -----------------------------------------*/
 fujon.core.Class = function(object) {
 	if (object instanceof Object) {
-		var primitive = new fujon.core.Primitive();
-
+		this.primitive = new fujon.core.Primitive();
+		this.primitive.toString = function(){
+			return '[object Class]' ;
+		};
+		this.primitive._super = {};
+		
 		for ( var property in object) {
+			
 			var tag_property = property.split('$');
 			if (tag_property.length > 1) {
 				if (tag_property[0] == 'static') {
-					primitive[tag_property[1]] = object[property];
+					this.primitive[tag_property[1]] = object[property];
 				}
 			} else {
 				if (property == 'constructor') {
-					primitive = object.constructor ;
-					primitive.prototype = {
-						constructor : primitive
-					};
-					primitive.toString = function() {
-						return '[object Class]';
-					};
+					//this.primitive = object.constructor ;
+					this.primitive.prototype.constructor = object.constructor ;
 				} else if (property == 'extend') {
-					primitive._super = {} ;
+					//primitive._super = {} ;
 					for ( var extend_property in object.extend) {
 						if (extend_property != 'constructor') {
-							primitive.prototype[extend_property] = object.extend[extend_property];
+							this.primitive.prototype[extend_property] = object.extend[extend_property];
 						}
-						primitive._super[extend_property] = object.extend[extend_property];
+						this.primitive._super[extend_property] = object.extend[extend_property];
 					}
 					
 				}else {
-					// if(object[property] ==
-					// primitive._super[property])alert('override');
-					primitive.prototype[property] = object[property];
+					this.primitive.prototype[property] = object[property];
 				}
 				if (property == 'toString') {
-					primitive.toString = object[property];
+					this.primitive.toString = object[property];
 				}
 			}
 		}
-		return primitive;
+		return this.primitive;
 	}
 };
 
 fujon.core.Class.prototype = {
 	constructor : fujon.core.Class,
-	_super : {},
+	//_super : {},
 	toString : function() {
 		if (this.name) {
 			return this.name;
@@ -220,7 +218,8 @@ fujon.core.Interface = new fujon.core.Class(
 							if (fujon.core.isArray(object[abstract_property])) {
 								for ( var i = 0; i < object[abstract_property].length; i++) {
 									if (object[abstract_property][i] != '[object Interface]')
-										alert('error array :' + i);
+										//alert('error array :' + i);
+										throw ERROR.CORE.InterfaceError ;
 									for ( var implement_property in new object[abstract_property][i]) {
 										this[implement_property] = object[implement_property];
 									}
