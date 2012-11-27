@@ -11,22 +11,22 @@ window.onload = function(){
 };
 var fujon = {
 	versionName : 'rc5',
-	versionCode : '0.5.5',
-	revision : '15/11/2012',
+	versionCode : '0.5.6',
+	revision : '27/11/2012',
 	author : 'Ivan Maruca',
 	signature : 'debug',
 	/* the FUJON tree packages */
 	tree : {},
 	/* dependencies */
 	baseLibrary : 'libs/',
-	dependencies : [ 'fujon-core.js',
-	                 'temp.js',
-	                 'fujon-error.js', 
-	                 'fujon-constants.js',
-	                 'fujon-shortcuts.js',  
-	                 'fujon-content.js',
-	                 'fujon-app.js',
-	                 'fujon-debug.js' ]
+	dependencies : [ 'fujon.constants.js',
+                   'fujon.error.js',
+                   'fujon.core.js',
+	                 'fujon.system.js',
+	                 'fujon.shortcuts.js',  
+	                 'fujon.content.js',
+	                 'fujon.app.js',
+	                 'fujon.debug.js' ]
 };
 /** ************************************************************************ */
 /**
@@ -100,7 +100,7 @@ var fLibs = new function() {
 		} else {
 			setTimeout(function(){
 				_this.append(file[currentStack]);
-			},0);
+			},50);
 		}
 
 	};
@@ -154,12 +154,14 @@ var fLibs = new function() {
 (function() {
 	var scripts = document.getElementsByTagName('script');
 	var mainFile = 'fujon-main-' + fujon.versionName + '.js';
+  var mainRoot = '' ;
 	var lib;
 	var callback;
 	var dep = 'dependencies';
 
 	for ( var s = 0; s < scripts.length; s++) {
 		if (scripts[s].getAttribute('src').search(mainFile) != -1) {
+      mainRoot = scripts[s].src.split(mainFile)[0] + fujon.baseLibrary ;
 			// search for library attribute
 			if (scripts[s].getAttribute('library') != undefined) {
 				lib = scripts[s].getAttribute('library');
@@ -169,23 +171,13 @@ var fLibs = new function() {
 				callback = scripts[s].getAttribute('callback');
 			}
 
-			// fire load request
-			/*
-			 * if(lib){ switch (lib) { case 'dependencies':
-			 * fLibs.setBaseLibrary(fujon.baseLibrary); if(callback){
-			 * fLibs.load(fujon.dependencies,setTimeout(callback+'()',50));
-			 * }else fLibs.load(fujon.dependencies); break; default:
-			 * if(callback){ fLibs.load(lib,setTimeout(callback+'()',50)); }else
-			 * fLibs.load(lib); } }
-			 */
-
 			var ignoreLib;
 			var libToLoad = new Array();
 
 			// new method of fire load request
 			if (lib) {
-				var libPat = /(([a-zA-Z0-9-]+\/)?)+([a-zA-Z0-9-]+(.js))/gi
-				var searchForIgnore = /dependencies\!\((([a-zA-Z0-9-]+(.js)),?)+\)/gi;
+				var libPat = /(([a-zA-Z0-9-._]+\/)?)+([a-zA-Z0-9-._]+(.js))/gi
+				var searchForIgnore = /dependencies\!\((([a-zA-Z0-9-._]+(.js)),?)+\)/gi;
 				var d = fujon.dependencies;
 				var all = lib.match(libPat);
 
@@ -234,6 +226,7 @@ var fLibs = new function() {
 				//alert(libToLoad);
 				// fire load
 				handler = callback ? callback + '()' : undefined;
+        fLibs.setBaseLibrary(mainRoot);
 				fLibs.load(libToLoad, handler);
 			}
 

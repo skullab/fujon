@@ -14,8 +14,10 @@ DEBUG
 fujon.debug = {
   toString: function(){
     return 'fujon.debug' ;
-  },
-  Console: new fujon.core.Class({
+  }
+};
+
+fujon.debug.Console = new fujon.core.Class({
     constructor: function(){
     	this.activateConsole();
       this.blurforced = false ;
@@ -99,9 +101,9 @@ fujon.debug = {
     	}
     	
       msg = msg.replace(/(<br>)/gi,'<br>+------------> ');
-    	var now = new Date();
-    	var timestamp = now.getHours()+':'+now.getMinutes()+':'+now.getSeconds()+':'+now.getMilliseconds() ;
-    	this.console.flush(timestamp,msgStyle,msg);
+    	//var now = new Date();
+    	//var timestamp = now.getHours()+':'+now.getMinutes()+':'+now.getSeconds()+':'+now.getMilliseconds() ;
+    	this.console.flush(fujon.system.getTimeStamp(),msgStyle,msg);
     },
     forceBlur:function(v){
       this.blurforced = v ;
@@ -124,6 +126,75 @@ fujon.debug = {
     static$W:'w',
     static$V:'v',
     static$D:'d'
-  })  
+});  
+
+fujon.debug.Logger = new function(msg){
+
+  var tag = '' ;
+  var run = (fujon.signature == fujon.constants.SIGNATURE.DEBUG) ? true : false ;
+  var _this = this ;
+  this.name = '' ;
+  
+  this.setTag = function(t){
+    tag = t ;
+  };
+  this.getTag = function(){
+    return tag ;
+  };
+  this.enable = function(v){
+      run = v ;
+  }
+  this.getLogger = function(n){
+    _this.name = n ;
+    return _this ;
+  };
+  this.group = function(n){
+    console.group(n);
+  }
+  this.groupEnd = function(){
+    console.groupEnd();
+  }
+  /********************************************/
+  this.l = function(){
+    if(run){
+      var t = arguments[1] ? arguments[0] : tag ;
+      var m = arguments[1] || arguments[0];
+      var d = fujon.system.getTimestamp() ;
+      console.log(d,' ',t,' : ',m);
+    }
+  };
+  this.d = function(){
+    if(run){
+      var t = arguments[1] ? arguments[0] : tag ;
+      var m = arguments[1] || arguments[0];
+      var d = fujon.system.getTimestamp() ;
+      console.debug(d,' ',t,' : ',m);
+    }
+  };
+  this.i = function(){
+    if(run){
+      var t = arguments[1] ? arguments[0] : tag ;
+      var m = arguments[1] || arguments[0];
+      var d = fujon.system.getTimestamp() ;
+      console.info(d,' ',t,' : ',m);
+    }
+  };
+  this.w = function(){
+    if(run){
+      var t = arguments[1] ? arguments[0] : tag ;
+      var m = arguments[1] || arguments[0];
+      var d = fujon.system.getTimestamp() ;
+      console.warn(d,' ',t,' : ',m);
+    }
+  };
+  this.e = function(){
+    if(run){
+      var t = arguments[1] ? arguments[0] : tag ;
+      var m = arguments[1] || arguments[0];
+      var d = fujon.system.getTimestamp() ;
+      console.error(d,' ',t,' : ',m);
+    }
+  };
 };
+
 fPackage.create(fujon.debug);
