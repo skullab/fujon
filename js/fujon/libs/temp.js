@@ -48,3 +48,4 @@ fujon.core.Class2 = function(object){
 };
 
 fujon.core.Class2.prototype.constructor = fujon.core.Class2 ;
+
