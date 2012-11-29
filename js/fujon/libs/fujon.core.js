@@ -1,6 +1,6 @@
 /**
  * THE FUJON JAVASCRIPT FRAMEWORK ! Copyright(c)2005-2012 Released under Apache
-
+ * 
  * License Version 2.0, January 2004 (see the license here :
  * http://www.apache.org/licenses/LICENSE-2.0.txt)
  * 
@@ -11,15 +11,15 @@
 /*----------------------------------------
  CORE
  -----------------------------------------*/
-//alert('fire core');  
+// alert('fire core');
 fujon.core = {
 	toString : function() {
 		return 'fujon.core';
 	},
-	typifies : function(type){
+	typifies : function(type) {
 		switch (type) {
 		case fujon.constants.TYPE.NUMBER:
-			return 0 ;
+			return 0;
 		case fujon.constants.TYPE.STRING:
 			return '';
 		case fujon.constants.TYPE.BOOLEAN:
@@ -27,7 +27,8 @@ fujon.core = {
 		case fujon.constants.TYPE.OBJECT:
 			return {};
 		case fujon.constants.TYPE.FUNCTION:
-			return function(){};
+			return function() {
+			};
 		case fujon.constants.TYPE.ARRAY:
 			return new Array();
 		}
@@ -98,7 +99,7 @@ fujon.core = {
 	getClientSize : function() {
 		return [ document.body.clientWidth, document.body.clientHeight ];
 	},
-	//TODO Mouse broke :-(
+	// TODO Mouse broke :-(
 	Mouse : {
 		toString : function() {
 			return 'fujon.core.Mouse';
@@ -151,129 +152,104 @@ fujon.core.Primitive.prototype = {
  CORE
  +> Class
  -----------------------------------------*/
-/*fujon.core.Class = function(object) {
+/*
+ * fujon.core.Class = function(object) { if (object instanceof Object) {
+ * this.primitive = new fujon.core.Primitive(); this.primitive.toString =
+ * function(){ return '[object Class]' ; }; this.primitive._super = {};
+ * 
+ * for ( var property in object) {
+ * 
+ * var tag_property = property.split('$'); if (tag_property.length > 1) { if
+ * (tag_property[0] == 'static') { this.primitive[tag_property[1]] =
+ * object[property]; } } else { if (property == 'constructor') {
+ * //this.primitive = object.constructor ; this.primitive.prototype.constructor =
+ * object.constructor ; } else if (property == 'extend') { //primitive._super = {} ;
+ * for ( var extend_property in object.extend) { if (extend_property !=
+ * 'constructor') { this.primitive.prototype[extend_property] =
+ * object.extend[extend_property]; } this.primitive._super[extend_property] =
+ * object.extend[extend_property]; }
+ * 
+ * }else { this.primitive.prototype[property] = object[property]; } if (property ==
+ * 'toString') { this.primitive.toString = object[property]; } } } return
+ * this.primitive; } };
+ * 
+ * fujon.core.Class.prototype = { constructor : fujon.core.Class, //_super : {},
+ * toString : function() { if (this.name) { return this.name; } else return
+ * '[object Class]'; }
+ *  };
+ */
+fujon.core.Class = function(object) {
 	if (object instanceof Object) {
-		this.primitive = new fujon.core.Primitive();
-		this.primitive.toString = function(){
-			return '[object Class]' ;
-		};
-		this.primitive._super = {};
-		
+		var primitive = new fujon.core.Primitive();
+		var abstractMethods = [];
+
 		for ( var property in object) {
-			
 			var tag_property = property.split('$');
 			if (tag_property.length > 1) {
-				if (tag_property[0] == 'static') {
-					this.primitive[tag_property[1]] = object[property];
+				switch (tag_property[0]) {
+				case 'static':
+					primitive[tag_property[1]] = object[property];
+					break;
 				}
-			} else {
-				if (property == 'constructor') {
-					//this.primitive = object.constructor ;
-					this.primitive.prototype.constructor = object.constructor ;
-				} else if (property == 'extend') {
-					//primitive._super = {} ;
-					for ( var extend_property in object.extend) {
-						if (extend_property != 'constructor') {
-							this.primitive.prototype[extend_property] = object.extend[extend_property];
+			}// else{
+			switch (property) {
+			case 'extend':
+				if (!primitive._super) {
+					primitive.prototype._super = {};
+				}
+				for ( var extend_property in object.extend.prototype) {
+
+					tag_property = extend_property.split('$');
+					if (tag_property.length > 1) {
+						switch (tag_property[0]) {
+						case 'static':
+							primitive[tag_property[1]] = object.extend.prototype[extend_property];
+							break;
+						case 'abstract':
+							abstractMethods[tag_property[1]] = object.extend.prototype[extend_property];
+							break;
 						}
-						this.primitive._super[extend_property] = object.extend[extend_property];
+					} else {
+						primitive.prototype[extend_property] = object.extend.prototype[extend_property];
+						primitive.prototype._super[extend_property] = object.extend.prototype[extend_property];
 					}
-					
-				}else {
-					this.primitive.prototype[property] = object[property];
 				}
-				if (property == 'toString') {
-					this.primitive.toString = object[property];
+				primitive.prototype._super.constructor = function() {
+					object.extend.prototype.constructor.apply(
+							primitive.prototype, arguments);
+				};
+				break;
+			case 'constructor':
+				primitive = object.constructor;
+				break;
+			case 'toString':
+				primitive.toString = object.toString;
+				break;
+			default:
+				primitive.prototype[property] = object[property];
+			}
+			// }
+		}
+
+		for ( var abs in abstractMethods) {
+			var check = false;
+			for ( var p in primitive.prototype) {
+				if (abs == p) {
+					check = true;
+					break;
 				}
 			}
+			if (!check)
+				throw ERROR.CORE.BadAbstractMethod.message.replace('%s', abs);
 		}
-		return this.primitive;
-	}
-};
-
-fujon.core.Class.prototype = {
-	constructor : fujon.core.Class,
-	//_super : {},
-	toString : function() {
-		if (this.name) {
-			return this.name;
-		} else
-			return '[object Class]';
-	}
-
-};  */
-fujon.core.Class = function(object){
-	if(object instanceof Object){
-		var primitive = new fujon.core.Primitive();
-    var abstractMethods = [] ;
-    
-		for(var property in object){
-			var tag_property = property.split('$');
-			if (tag_property.length > 1) {
-        switch(tag_property[0]){
-        case 'static':
-          primitive[tag_property[1]] = object[property];
-          break;
-        }
-			}//else{
-				switch(property){
-				case 'extend':
-					if(!primitive._super){
-						primitive.prototype._super = {} ;
-					}
-					for(var extend_property in object.extend.prototype){
-            
-            tag_property = extend_property.split('$');
-			      if (tag_property.length > 1) {
-              switch(tag_property[0]){
-              case 'static':
-                primitive[tag_property[1]] = object.extend.prototype[extend_property];
-                break;
-              case 'abstract':
-                abstractMethods[tag_property[1]] = object.extend.prototype[extend_property];
-                break;
-              }
-			      }else{
-					    primitive.prototype[extend_property] = object.extend.prototype[extend_property] ;
-						  primitive.prototype._super[extend_property] = object.extend.prototype[extend_property] ;
-            }
-					}
-					primitive.prototype._super.constructor = function(){
-						object.extend.prototype.constructor.apply(primitive.prototype,arguments);
-					};
-					break;
-				case 'constructor':
-					primitive = object.constructor ;
-					break;
-				case 'toString':
-					primitive.toString = object.toString ;
-					break;
-				default:
-					primitive.prototype[property] = object[property];
-					primitive.toString = function(){
-						return '[object Class]' ;
-					};
-				}
-			//} 
-		}
-    
-		for(var abs in abstractMethods){
-      var check = false ;
-      for(var p in primitive.prototype){
-        if(abs == p){
-          check = true ;
-          break;
-        }
-      }
-      if(!check)throw ERROR.CORE.BadAbstractMethod.message.replace('%s',abs);
-    }
-    
-		return primitive ;
 		
-	}else throw ERROR.CORE.IllegalTypeAssignment ;
+		return primitive;
+
+	} else
+		throw ERROR.CORE.IllegalTypeAssignment;
 };
 
-fujon.core.Class.prototype.constructor = fujon.core.Class ;
+fujon.core.Class.prototype.constructor = fujon.core.Class;
 /*----------------------------------------
  CORE
  +> Interface
@@ -286,12 +262,11 @@ fujon.core.Interface = new fujon.core.Class(
 						if (abstract_property == 'implement') {
 							if (!fujon.core.isArray(object[abstract_property])
 									&& object[abstract_property] != '[object Interface]')
-								throw ERROR.CORE.InterfaceError ;
+								throw ERROR.CORE.InterfaceError;
 							if (fujon.core.isArray(object[abstract_property])) {
 								for ( var i = 0; i < object[abstract_property].length; i++) {
 									if (object[abstract_property][i] != '[object Interface]')
-										//alert('error array :' + i);
-										throw ERROR.CORE.InterfaceError ;
+										throw ERROR.CORE.InterfaceError;
 									for ( var implement_property in new object[abstract_property][i]) {
 										this[implement_property] = object[implement_property];
 									}
@@ -304,7 +279,7 @@ fujon.core.Interface = new fujon.core.Class(
 						} else
 							this[abstract_property] = object[abstract_property];
 					}
-					
+
 					var _this = this;
 					return new fujon.core.Class(
 							{
@@ -312,7 +287,8 @@ fujon.core.Interface = new fujon.core.Class(
 									if (object instanceof Object) {
 										for ( var implement in object) {
 											var check = false;
-											for ( var implement_to_override in this) {
+											for ( var implement_to_override in _this) {
+												
 												if (implement_to_override != 'constructor'
 														&& implement_to_override != 'toString'
 														&& implement_to_override != 'implement') {
@@ -441,7 +417,8 @@ fujon.core.ListenerManager = new function() {
 	 * Check for valid listener interface
 	 */
 	this.checkListener = function(listener) {
-		return (listener != null && listener == '[object Interface]');
+		//return (listener != null && listener === '[object Interface]');
+		return true ;
 	};
 	/**
 	 * Add Listener to an Element Return true if add or false otherwise
@@ -449,7 +426,8 @@ fujon.core.ListenerManager = new function() {
 	this.addListener = function(elem, type, exp, state) {
 		// state true = capture o false = bubbling (default)
 		var state = state || false;
-		//if (!fujon.core.Element.isValidElement(elem))throw ERROR.CORE.IllegalTypeAssignment ;
+		// if (!fujon.core.Element.isValidElement(elem))throw
+		// ERROR.CORE.IllegalTypeAssignment ;
 		if (window.addEventListener) {
 			elem.addEventListener(type, exp, state);
 			return true;
@@ -462,7 +440,7 @@ fujon.core.ListenerManager = new function() {
 	this.removeListener = function(elem, type, exp, state) {
 		var state = state || false;
 		if (!fujon.core.Element.isValidElement(elem))
-			throw ERROR.CORE.IllegalTypeAssignment ;
+			throw ERROR.CORE.IllegalTypeAssignment;
 		if (window.removeEventListener) {
 			elem.removeEventListener(type, exp, state);
 			return true;
@@ -589,14 +567,17 @@ fujon.core.Element = new fujon.core.Class(
 					throw ERROR.CORE.IllegalTypeAssignment;
 				return this.elementObject.getAttribute(attr);
 			},
-      static$convert : function(obj){
-        if(fujon.core.isElement(obj)){
-          var converted = new fujon.core.Element(obj.tagName);
-          converted.elementObject = obj ;
-          return converted ;
-        }
-        return null ;
-      },
+			static$convert : function(obj) {
+				if (fujon.core.isElement(obj)) {
+					var converted = new fujon.core.Element(obj.tagName);
+					converted.elementObject = obj;
+					return converted;
+				}
+				return null;
+			},
+			static$getById : function(id){
+				return document.getElementById(id);
+			},
 			// ONLOAD ONLY !
 			static$HTML : document.getElementsByTagName('html')[0],
 			static$BODY : document.getElementsByTagName('body')[0],
@@ -786,11 +767,11 @@ fujon.core.Element = new fujon.core.Class(
 										if (!selection && document.selection)
 											selection = function() {
 												return document.selection
-														.createRange().text ;
+														.createRange().text;
 											};
 										if (!selection)
 											selection = function() {
-												return null ;
+												return null;
 											};
 										_this.selectListener.onSelect(_this,
 												selection(), e);
@@ -814,7 +795,7 @@ fujon.core.Pointer = new fujon.core.Class({
 	objects : [],
 	get : function(obj) {
 		if (isNaN(obj)) {
-			for (var i = 0; i < this.ojects.length; i++) {
+			for ( var i = 0; i < this.ojects.length; i++) {
 				if (this.objects[i] == obj)
 					return this.objects[i];
 			}
@@ -831,7 +812,7 @@ fujon.core.Pointer = new fujon.core.Class({
 		}
 	},
 	empty : function() {
-		for (var i = 0; i < this.objects.length; i++) {
+		for ( var i = 0; i < this.objects.length; i++) {
 			if (!this.objects[i])
 				return i;
 		}
@@ -841,7 +822,7 @@ fujon.core.Pointer = new fujon.core.Class({
 		this.objects = [];
 	},
 	erase : function(obj) {
-		for (var i = 0; i < this.objects.length; i++) {
+		for ( var i = 0; i < this.objects.length; i++) {
 			if (this.objects[i] == obj) {
 				if (i != 0 && i < (this.objects.length - 1)) {
 					var arrayEnd = this.objects.slice(i).shift();
@@ -881,22 +862,22 @@ fujon.core.thread = {
 	},
 	START : {
 		toString : function() {
-			return '[object START]' ;
+			return '[object START]';
 		}
 	},
 	CONTINUE : {
 		toString : function() {
-			return '[object CONTINUE]' ;
+			return '[object CONTINUE]';
 		}
 	},
 	STOP : {
 		toString : function() {
-			return '[object STOP]' ;
+			return '[object STOP]';
 		}
 	},
 	KILL : {
 		toString : function() {
-			return '[object KILL]' ;
+			return '[object KILL]';
 		}
 	},
 	Generator : function(maxStack) {
@@ -921,7 +902,7 @@ fujon.core.thread = {
 			},
 			hasNext : function() {
 				try {
-					this.next() ;
+					this.next();
 					cursor -= 1;
 					return true;
 				} catch (e) {
@@ -943,14 +924,14 @@ fujon.core.thread = {
 	Thread : function(obj) {
 		var alreadyStarted = false;
 		this.runnable = {};
-		this.onceWait = false ;
-		this.tempo = null ;
-		
+		this.onceWait = false;
+		this.tempo = null;
+
 		if (obj instanceof fujon.core.thread.Runnable) {
 			this.runnable = obj;
 		} else if (typeof (obj) == 'function') {
 			this.runnable.run = obj;
-		} //else throw ERROR.THREAD.notRunnable;
+		} // else throw ERROR.THREAD.notRunnable;
 
 		this.isStarted = function() {
 			if (!alreadyStarted) {
@@ -965,7 +946,7 @@ fPackage.create(fujon.core.thread);
 /*----------------------------------------
  CORE
  +> thread
- 		+> Thread
+ +> Thread
  -----------------------------------------*/
 fujon.core.thread.Thread.prototype = {
 	constructor : fujon.core.thread.Thread,
@@ -977,13 +958,14 @@ fujon.core.thread.Thread.prototype = {
 	},
 	start : function() {
 		if (!this.isStarted()) {
-			if(!this.runnable.run)throw ERROR.THREAD.notRunnable ;
+			if (!this.runnable.run)
+				throw ERROR.THREAD.notRunnable;
 			this.run(this.runnable);
 			return this;
 		} else
 			throw ERROR.THREAD.IllegalThreadStateException;
 	},
-	setRunnable : function(runnable){
+	setRunnable : function(runnable) {
 		this.constructor(runnable);
 	},
 	run : function(runnable) {
@@ -992,14 +974,14 @@ fujon.core.thread.Thread.prototype = {
 			try {
 				_this.isStopped = false;
 				var callback = runnable.run();
-				
-				switch(callback){
-				case STOP :
+
+				switch (callback) {
+				case STOP:
 					_this.stop();
 					break;
-				case WAIT :
+				case WAIT:
 					clearInterval(_this.tempo);
-					_this.onceWait = _this.onceWait || true ;
+					_this.onceWait = _this.onceWait || true;
 					_this.tempo = setTimeout(function() {
 						_this.run(runnable);
 					}, callback.milliseconds);
@@ -1012,7 +994,7 @@ fujon.core.thread.Thread.prototype = {
 				default:
 					_this.stop();
 				}
-				
+
 			} catch (e) {
 				if (e == ERROR.GENERATOR.StopIteration) {
 					clearInterval(_this.tempo);

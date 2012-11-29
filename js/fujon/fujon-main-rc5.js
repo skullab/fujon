@@ -6,9 +6,6 @@
  * Author : ivan[dot]maruca[at]gmail[dot]com <http://fujon.blogspot.com>
  * 
  */
-window.onload = function(){
-	fujon.windowisloaded = true ;
-};
 var fujon = {
 	versionName : 'rc5',
 	versionCode : '0.5.6',
@@ -28,6 +25,11 @@ var fujon = {
 	                 'fujon.app.js',
 	                 'fujon.debug.js' ]
 };
+if (window.addEventListener) {
+	window.addEventListener('load',function(){fujon.windowisloaded = true ; },false);
+} else if (window.attachEvent) {
+	window.attachEvent('onload',function(){fujon.windowisloaded = true ; });
+}
 /** ************************************************************************ */
 /**
  * IMPORT function Used for import inside the HTML document the variables
