@@ -205,22 +205,38 @@ fujon.core.Class.prototype = {
 fujon.core.Class = function(object){
 	if(object instanceof Object){
 		var primitive = new fujon.core.Primitive();
-
+    var abstractMethods = [] ;
+    
 		for(var property in object){
 			var tag_property = property.split('$');
 			if (tag_property.length > 1) {
-				if (tag_property[0] == 'static') {
-					primitive[tag_property[1]] = object[property];
-				}
-			}else{
+        switch(tag_property[0]){
+        case 'static':
+          primitive[tag_property[1]] = object[property];
+          break;
+        }
+			}//else{
 				switch(property){
 				case 'extend':
 					if(!primitive._super){
 						primitive.prototype._super = {} ;
 					}
 					for(var extend_property in object.extend.prototype){
-					  primitive.prototype[extend_property] = object.extend.prototype[extend_property] ;
-						primitive.prototype._super[extend_property] = object.extend.prototype[extend_property] ;
+            
+            tag_property = extend_property.split('$');
+			      if (tag_property.length > 1) {
+              switch(tag_property[0]){
+              case 'static':
+                primitive[tag_property[1]] = object.extend.prototype[extend_property];
+                break;
+              case 'abstract':
+                abstractMethods[tag_property[1]] = object.extend.prototype[extend_property];
+                break;
+              }
+			      }else{
+					    primitive.prototype[extend_property] = object.extend.prototype[extend_property] ;
+						  primitive.prototype._super[extend_property] = object.extend.prototype[extend_property] ;
+            }
 					}
 					primitive.prototype._super.constructor = function(){
 						object.extend.prototype.constructor.apply(primitive.prototype,arguments);
@@ -238,9 +254,20 @@ fujon.core.Class = function(object){
 						return '[object Class]' ;
 					};
 				}
-			}
+			//} 
 		}
-		
+    
+		for(var abs in abstractMethods){
+      var check = false ;
+      for(var p in primitive.prototype){
+        if(abs == p){
+          check = true ;
+          break;
+        }
+      }
+      if(!check)throw ERROR.CORE.BadAbstractMethod.message.replace('%s',abs);
+    }
+    
 		return primitive ;
 		
 	}else throw ERROR.CORE.IllegalTypeAssignment ;

@@ -15,7 +15,9 @@ var ERROR = {
     CORE:{
         IllegalTypeAssignment: new Error('CORE : IllegalTypeAssignment'),
         IllegalInterfaceMethod : new Error('CORE.INTERFACE : You must override all and only methods of Interface'),
-        InterfaceError: new Error('CORE.INTERFACE : Bad Interface implementation')
+        InterfaceError: new Error('CORE.INTERFACE : Bad Interface implementation'),
+        NoSuchMethodException: new Error('CORE.CLASS : Could not find method "%s"'),
+        BadAbstractMethod: new Error('CORE.CLASS : You must override the abstract method "%s"')
     },
     LIBRARY:{
         package: new Error('LIBRARY : Try to import undefined package'),
