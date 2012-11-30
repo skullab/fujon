@@ -175,18 +175,17 @@ fujon.core.Primitive.prototype = {
  * 
  * fujon.core.Class.prototype = { constructor : fujon.core.Class, //_super : {},
  * toString : function() { if (this.name) { return this.name; } else return
- * '[object Class]'; }
- *  };
+ * '[object Class]'; } };
  */
 fujon.core.Class = function(object) {
 	if (object instanceof Object) {
 		var primitive = new fujon.core.Primitive();
-    primitive.toString = function(){
-          return '[object Class]' ;
-    };
+		primitive.toString = function() {
+			return '[object Class]';
+		};
 		var abstractMethods = [];
-    var overExtend = false ;
-    
+		var overExtend = false;
+
 		for ( var property in object) {
 			var tag_property = property.split('$');
 			if (tag_property.length > 1) {
@@ -201,6 +200,7 @@ fujon.core.Class = function(object) {
 				if (!primitive._super) {
 					primitive.prototype._super = {};
 				}
+
 				for ( var extend_property in object.extend.prototype) {
 
 					tag_property = extend_property.split('$');
@@ -217,33 +217,28 @@ fujon.core.Class = function(object) {
 						primitive.prototype[extend_property] = object.extend.prototype[extend_property];
 						primitive.prototype._super[extend_property] = object.extend.prototype[extend_property];
 					}
-          
-          if(extend_property == '_super'){
-            //console.log('extension of extension');
-            overExtend = true ;    
-          }
-          
+
 				}
 
 				primitive.prototype._super.constructor = function() {
-					object.extend.prototype.constructor.apply(
-							primitive.prototype, arguments);
+					console.log(primitive.prototype);
+					//arguments.callee.caller.apply(object.extend.prototype._super,arguments);
+					object.extend.prototype.constructor.apply(primitive.prototype, arguments);
 				};
-        
+				
+
 				break;
-      case '_super':
-          console.log('overExtension');
-        break;
-      case 'implement':
-        for(var implement_property in object.implement){
-          primitive.prototype[implement_property] = object.implement[implement_property] ;
-        }
-        break;
+			
+			case 'implement':
+				for ( var implement_property in object.implement) {
+					primitive.prototype[implement_property] = object.implement[implement_property];
+				}
+				break;
 			case 'constructor':
 				primitive = object.constructor;
-        primitive.toString = function(){
-          return '[object Class]' ;
-        };
+				primitive.toString = function() {
+					return '[object Class]';
+				};
 				break;
 			case 'toString':
 				primitive.toString = object.toString;
@@ -272,10 +267,10 @@ fujon.core.Class = function(object) {
 		throw ERROR.CORE.IllegalTypeAssignment;
 };
 
-fujon.core.Class.toString = function(){
-  return '[object Class]' ;
-}
-fujon.core.Class.prototype.constructor = fujon.core.Class ;
+fujon.core.Class.toString = function() {
+	return '[object Class]';
+};
+fujon.core.Class.prototype.constructor = fujon.core.Class;
 /*----------------------------------------
  CORE
  +> Interface
@@ -330,16 +325,16 @@ fujon.core.Interface = new fujon.core.Class(
 										}
 									}
 								},
-								//extend : _this,
+								// extend : _this,
 								toString : function() {
 									return '[object Interface]';
 								}
 							});
 				}
 			},
-      toString:function(){
-        return '[object Interface]' ;
-      }
+			toString : function() {
+				return '[object Interface]';
+			}
 		});
 
 /*----------------------------------------
@@ -445,7 +440,7 @@ fujon.core.ListenerManager = new function() {
 	 * Check for valid listener interface
 	 */
 	this.checkListener = function(listener) {
-    //console.log(listener instanceof Object);
+		// console.log(listener instanceof Object);
 		return (listener != null && listener instanceof Object);
 	};
 	/**
@@ -503,16 +498,16 @@ fujon.core.Element = new fujon.core.Class(
 			getElementObject : function() {
 				return this.elementObject;
 			},
-      getContent: function(){
-        if(this.elementObject != null){
-          return this.elementObject.innerHTML ;
-        }
-      },
-      setContent: function(content){
-         if(this.elementObject != null){
-           this.elementObject.innerHTML = content ;
-         }
-      },
+			getContent : function() {
+				if (this.elementObject != null) {
+					return this.elementObject.innerHTML;
+				}
+			},
+			setContent : function(content) {
+				if (this.elementObject != null) {
+					this.elementObject.innerHTML = content;
+				}
+			},
 			clone : function(obj) {
 				if (obj instanceof fujon.core.Element) {
 					this.elementObject = obj.elementObject.cloneNode(true);
@@ -613,7 +608,7 @@ fujon.core.Element = new fujon.core.Class(
 				}
 				return null;
 			},
-			static$getById : function(id){
+			static$getById : function(id) {
 				return document.getElementById(id);
 			},
 			// ONLOAD ONLY !
@@ -828,7 +823,7 @@ fujon.core.Element = new fujon.core.Class(
  +> Pointer
  -----------------------------------------*/
 fujon.core.Pointer = new fujon.core.Class({
-	//constructor : function() {},
+	// constructor : function() {},
 	objects : [],
 	get : function(obj) {
 		if (isNaN(obj)) {
