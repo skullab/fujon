@@ -11,7 +11,7 @@
 /*----------------------------------------
  CORE
  -----------------------------------------*/
-// alert('fire core');
+
 fujon.core = {
 	toString : function() {
 		return 'fujon.core';
@@ -181,8 +181,12 @@ fujon.core.Primitive.prototype = {
 fujon.core.Class = function(object) {
 	if (object instanceof Object) {
 		var primitive = new fujon.core.Primitive();
+    primitive.toString = function(){
+          return '[object Class]' ;
+    };
 		var abstractMethods = [];
-
+    var overExtend = false ;
+    
 		for ( var property in object) {
 			var tag_property = property.split('$');
 			if (tag_property.length > 1) {
@@ -213,14 +217,33 @@ fujon.core.Class = function(object) {
 						primitive.prototype[extend_property] = object.extend.prototype[extend_property];
 						primitive.prototype._super[extend_property] = object.extend.prototype[extend_property];
 					}
+          
+          if(extend_property == '_super'){
+            //console.log('extension of extension');
+            overExtend = true ;    
+          }
+          
 				}
+
 				primitive.prototype._super.constructor = function() {
 					object.extend.prototype.constructor.apply(
 							primitive.prototype, arguments);
 				};
+        
 				break;
+      case '_super':
+          console.log('overExtension');
+        break;
+      case 'implement':
+        for(var implement_property in object.implement){
+          primitive.prototype[implement_property] = object.implement[implement_property] ;
+        }
+        break;
 			case 'constructor':
 				primitive = object.constructor;
+        primitive.toString = function(){
+          return '[object Class]' ;
+        };
 				break;
 			case 'toString':
 				primitive.toString = object.toString;
@@ -249,7 +272,10 @@ fujon.core.Class = function(object) {
 		throw ERROR.CORE.IllegalTypeAssignment;
 };
 
-fujon.core.Class.prototype.constructor = fujon.core.Class;
+fujon.core.Class.toString = function(){
+  return '[object Class]' ;
+}
+fujon.core.Class.prototype.constructor = fujon.core.Class ;
 /*----------------------------------------
  CORE
  +> Interface
@@ -288,7 +314,6 @@ fujon.core.Interface = new fujon.core.Class(
 										for ( var implement in object) {
 											var check = false;
 											for ( var implement_to_override in _this) {
-												
 												if (implement_to_override != 'constructor'
 														&& implement_to_override != 'toString'
 														&& implement_to_override != 'implement') {
@@ -305,13 +330,16 @@ fujon.core.Interface = new fujon.core.Class(
 										}
 									}
 								},
-								extend : _this,
+								//extend : _this,
 								toString : function() {
 									return '[object Interface]';
 								}
 							});
 				}
-			}
+			},
+      toString:function(){
+        return '[object Interface]' ;
+      }
 		});
 
 /*----------------------------------------
@@ -417,8 +445,8 @@ fujon.core.ListenerManager = new function() {
 	 * Check for valid listener interface
 	 */
 	this.checkListener = function(listener) {
-		//return (listener != null && listener === '[object Interface]');
-		return true ;
+    //console.log(listener instanceof Object);
+		return (listener != null && listener instanceof Object);
 	};
 	/**
 	 * Add Listener to an Element Return true if add or false otherwise
@@ -475,6 +503,16 @@ fujon.core.Element = new fujon.core.Class(
 			getElementObject : function() {
 				return this.elementObject;
 			},
+      getContent: function(){
+        if(this.elementObject != null){
+          return this.elementObject.innerHTML ;
+        }
+      },
+      setContent: function(content){
+         if(this.elementObject != null){
+           this.elementObject.innerHTML = content ;
+         }
+      },
 			clone : function(obj) {
 				if (obj instanceof fujon.core.Element) {
 					this.elementObject = obj.elementObject.cloneNode(true);
@@ -790,8 +828,7 @@ fujon.core.Element = new fujon.core.Class(
  +> Pointer
  -----------------------------------------*/
 fujon.core.Pointer = new fujon.core.Class({
-	constructor : function() {
-	},
+	//constructor : function() {},
 	objects : [],
 	get : function(obj) {
 		if (isNaN(obj)) {
