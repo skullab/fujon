@@ -23,7 +23,8 @@ var fujon = {
 	                 'fujon.shortcuts.js',  
 	                 'fujon.content.js',
 	                 'fujon.app.js',
-	                 'fujon.debug.js' ]
+	                 'fujon.debug.js',
+                   'temp.js' ]
 };
 if (window.addEventListener) {
 	window.addEventListener('load',function(){fujon.windowisloaded = true ; },false);

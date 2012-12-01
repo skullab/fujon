@@ -197,9 +197,11 @@ fujon.core.Class = function(object) {
 			}// else{
 			switch (property) {
 			case 'extend':
-				if (!primitive._super) {
-					primitive.prototype._super = {};
-				}
+        console.log('extend -> '+object.extend);
+        primitive.prototype._super = object.extend.prototype;
+				/*if (!primitive._super) {
+					primitive.prototype._super = object.extend.prototype;
+				}*/
 
 				for ( var extend_property in object.extend.prototype) {
 
@@ -214,19 +216,24 @@ fujon.core.Class = function(object) {
 							break;
 						}
 					} else {
-						primitive.prototype[extend_property] = object.extend.prototype[extend_property];
-						primitive.prototype._super[extend_property] = object.extend.prototype[extend_property];
+            if(extend_property != '_super'){
+						  primitive.prototype[extend_property] = //object.extend.prototype[extend_property];
+              
+              (function(name, fn){
+                  return function() {
+                      var tmp = this._super;
+                      this._super = primitive.prototype._super[name];
+                      var ret = fn.apply(this, arguments);
+                      this._super = tmp ;        
+                      return ret;
+                  };
+              })(extend_property, object.extend.prototype[extend_property]);
+            }
 					}
-
+          
+          if(extend_property == '_super')overExtend = true ;
 				}
-
-				primitive.prototype._super.constructor = function() {
-					console.log(primitive.prototype);
-					//arguments.callee.caller.apply(object.extend.prototype._super,arguments);
-					object.extend.prototype.constructor.apply(primitive.prototype, arguments);
-				};
-				
-
+	
 				break;
 			
 			case 'implement':
