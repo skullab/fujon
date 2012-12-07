@@ -53,6 +53,7 @@ fujon.core.Class2.prototype.constructor = fujon.core.Class2 ; */
  * MIT Licensed.
  */
 // Inspired by base2 and Prototype
+
 (function(){
   var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
   // The base Class implementation (does nothing)

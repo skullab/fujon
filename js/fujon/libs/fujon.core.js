@@ -197,11 +197,12 @@ fujon.core.Class = function(object) {
 			}// else{
 			switch (property) {
 			case 'extend':
-        console.log('extend -> '+object.extend);
-        primitive.prototype._super = object.extend.prototype;
-				/*if (!primitive._super) {
-					primitive.prototype._super = object.extend.prototype;
-				}*/
+				console.log('extend -> ' + object.extend);
+				primitive.prototype._super = object.extend.prototype;
+				/*
+				 * if (!primitive._super) { primitive.prototype._super =
+				 * object.extend.prototype; }
+				 */
 
 				for ( var extend_property in object.extend.prototype) {
 
@@ -216,26 +217,30 @@ fujon.core.Class = function(object) {
 							break;
 						}
 					} else {
-            if(extend_property != '_super'){
-						  primitive.prototype[extend_property] = //object.extend.prototype[extend_property];
-              
-              (function(name, fn){
-                  return function() {
-                      var tmp = this._super;
-                      this._super = primitive.prototype._super[name];
-                      var ret = fn.apply(this, arguments);
-                      this._super = tmp ;        
-                      return ret;
-                  };
-              })(extend_property, object.extend.prototype[extend_property]);
-            }
+						if (extend_property != '_super') {
+							primitive.prototype[extend_property] = object.extend.prototype[extend_property];
+
+							/*
+							 * (function(name, fn){ return function() { var tmp =
+							 * this._super; this._super =
+							 * primitive.prototype._super[name]; var ret =
+							 * fn.apply(this, arguments); this._super = tmp ;
+							 * return ret; }; })(extend_property,
+							 * object.extend.prototype[extend_property]);
+							 */
+						}
 					}
-          
-          if(extend_property == '_super')overExtend = true ;
+
+					if (extend_property == '_super')
+						overExtend = true;
 				}
-	
+				
+				primitive.prototype._super.constructor = function(){
+					object.extend.apply(primitive.prototype,arguments);
+				};
+
 				break;
-			
+
 			case 'implement':
 				for ( var implement_property in object.implement) {
 					primitive.prototype[implement_property] = object.implement[implement_property];
@@ -267,7 +272,7 @@ fujon.core.Class = function(object) {
 			if (!check)
 				throw ERROR.CORE.BadAbstractMethod.message.replace('%s', abs);
 		}
-		
+
 		return primitive;
 
 	} else
