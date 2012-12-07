@@ -37,7 +37,7 @@ function main() {
 	var test = new C();
 	log.l(test);
 }
-
+//******************************
 var A = fujon.core.Class({
 	constructor:function(a){
 		alert('const di a');
@@ -52,8 +52,8 @@ var B = fujon.core.Class({extend:A},{
 	constructor:function(){
 		alert('const di b');
 	},
-	foo2:function(){
-		alert('fooo 2');
+	foo:function(){
+		_super.foo();
 	}
 });
 

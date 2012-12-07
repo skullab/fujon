@@ -54,6 +54,7 @@ fujon.core.Class = function() {
 	var _class = arguments[1] ? arguments[1] : arguments[0];
 	var _classKeys = fujon.core.keysOf(_class);
 	var _classValues = fujon.core.valuesOf(_class);
+  var _finalClass = false ;
 	var primitive = fujon.core.Primitive();
 
 	// check option : is Object ?
@@ -71,20 +72,26 @@ fujon.core.Class = function() {
 	if (optionKeys) {
 		for(var value in optionKeys){
 			switch(optionKeys[value]){
-			case 'type' :
-				if (option.type == 'abstract'){
-					_class.constructor = function(){
+			case 'modifier' :
+        switch(option.modifier){
+        case 'abstract':
+          _class.constructor = function(){
 						throw new Error('Abstract Class cannot be instantiated');
 					}
-				}
+          break;
+        case 'final' :
+          _finalClass = true ;
+          break;
+        }
 				break;
 			case 'extend':
+        if(_finalClass)throw new Error('Final Class cannot be extended !');
 				transfer.prototype = option.extend.prototype ;
 				//var tmp = transfer.prototype.constructor ;
 				//transfer.prototype.constructor = function(){} ;
 				primitive.prototype = new transfer ;
 				primitive._superClass = option.extend.prototype ;
-				primitive.prototype._super = {} ;
+				primitive.prototype._super = function(){};
 				//primitive.prototype.constructor = tmp ;
 				break;
 			case 'implement':
@@ -100,10 +107,16 @@ fujon.core.Class = function() {
 	primitive.addProperty(_class);
 	
 	function addProperty(object){
+    var parent = this._superClass ; //&& this._superClass.prototype ;
+    console.log(parent);
 		for(var property in object){
-			if(this._superClass && this._superClass[property])
+			if(parent && parent[property]){
+        this.prototype._super.prototype[property] = function(){
+          return parent[property].apply(this,arguments);
+        }
+      }
+      this.prototype[property] = object[property] ;
 		}
-		this.prototype[name] = value ;
 	}
 	
 	primitive.prototype.constructor = _class.constructor ;
