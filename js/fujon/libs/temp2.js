@@ -111,12 +111,24 @@ fujon.core.Class = function() {
     console.log(parent);
 		for(var property in object){
 			if(parent && parent[property]){
-        this.prototype._super.prototype[property] = function(){
+        console.log('parent property -> '+property);
+        this.prototype._super[property] = function(){
+          console.log('callee -> '+arguments.callee);
+          console.log('call super -> '+property);
           return parent[property].apply(this,arguments);
         }
       }
+      console.log('add property -> '+property);
       this.prototype[property] = object[property] ;
 		}
+    if(this.prototype._super){
+      console.log(this.prototype._super);
+      this.prototype._super.constructor = function(){
+        console.log('callee -> '+arguments.callee.caller);
+        var context = arguments.callee.caller ;
+        return parent.constructor.apply(this,arguments);
+      }
+    }
 	}
 	
 	primitive.prototype.constructor = _class.constructor ;
