@@ -43,73 +43,56 @@ fujon.core.isString = function(str) {
 };
 fujon.core.Primitive = function() {
 	return function() {
-		this.constructor.apply(this, arguments);
+		return this.constructor.apply(this, arguments);
 	};
 };
 fujon.core.Primitive.prototype.constructor = fujon.core.Primitive;
 
-
-/*Function.prototype.update = function(array,args){
-	var arrayLenght = array.length, length = args.length ;
-	while(length--)array[arrayLenght+length] = args[length];
-	return array ;
-};
-Function.prototype.merge = function(array,args){
-	array = Array.slice.call(array,0);
-	return update(array,args);
-};
-Function.prototype.bind = function(context){
-	if(arguments.length < 2 && arguments[0] == undefined)return this ;
-	if(typeof this == 'function')throw new Error('THIS OBJECT IS NOT CALLABLE');
-	var nop = function(){};
-	var __method = this, args = Array.slice.call(arguments,1);
-	var bound = function(){
-		var a = merge(args,arguments);
-		var c = this instanceof bound ? this : context ;
-		return __method.apply(c,a);
-	};
-	nop.prototype = this.prototype ;
-	bound.prototype = new nop();
-	return bound ;
-};
-Function.prototype.wrap = function(wrapper){
-	var __method = this ;
-	return function(){
-		var a = update([__method.bind(this)],arguments);
-		return wrapper.apply(this,a);
-	};
-};*/
+/*
+ * Function.prototype.update = function(array,args){ var arrayLenght =
+ * array.length, length = args.length ; while(length--)array[arrayLenght+length] =
+ * args[length]; return array ; }; Function.prototype.merge =
+ * function(array,args){ array = Array.slice.call(array,0); return
+ * update(array,args); }; Function.prototype.bind = function(context){
+ * if(arguments.length < 2 && arguments[0] == undefined)return this ; if(typeof
+ * this == 'function')throw new Error('THIS OBJECT IS NOT CALLABLE'); var nop =
+ * function(){}; var __method = this, args = Array.slice.call(arguments,1); var
+ * bound = function(){ var a = merge(args,arguments); var c = this instanceof
+ * bound ? this : context ; return __method.apply(c,a); }; nop.prototype =
+ * this.prototype ; bound.prototype = new nop(); return bound ; };
+ * Function.prototype.wrap = function(wrapper){ var __method = this ; return
+ * function(){ var a = update([__method.bind(this)],arguments); return
+ * wrapper.apply(this,a); }; };
+ */
 
 if (!Function.prototype.bind) {
-	  Function.prototype.bind = function (oThis) {
-	    if (typeof this !== "function") {
-	      // closest thing possible to the ECMAScript 5 internal IsCallable function
-	      throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
-	    }
-	 
-	    var aArgs = Array.prototype.slice.call(arguments, 1), 
-	        fToBind = this, 
-	        fNOP = function () {},
-	        fBound = function () {
-	          return fToBind.apply(this instanceof fNOP && oThis
-	                                 ? this
-	                                 : oThis,
-	                               aArgs.concat(Array.prototype.slice.call(arguments)));
-	        };
-	 
-	    fNOP.prototype = this.prototype;
-	    fBound.prototype = new fNOP();
-	 
-	    return fBound;
-	  };
-	}
+	Function.prototype.bind = function(oThis) {
+		if (typeof this !== "function") {
+			// closest thing possible to the ECMAScript 5 internal IsCallable
+			// function
+			throw new TypeError(
+					"Function.prototype.bind - what is trying to be bound is not callable");
+		}
+
+		var aArgs = Array.prototype.slice.call(arguments, 1), fToBind = this, fNOP = function() {
+		}, fBound = function() {
+			return fToBind.apply(this instanceof fNOP && oThis ? this : oThis,
+					aArgs.concat(Array.prototype.slice.call(arguments)));
+		};
+
+		fNOP.prototype = this.prototype;
+		fBound.prototype = new fNOP();
+
+		return fBound;
+	};
+}
 
 fujon.core.Class = function() {
 
 	var optionKeys, optionValues, option = arguments[1] ? fujon.core.toArray(arguments).shift() : null;
 	var _class = arguments[1] ? arguments[1] : arguments[0];
-	//var _classKeys = fujon.core.keysOf(_class);
-	//var _classValues = fujon.core.valuesOf(_class);
+	// var _classKeys = fujon.core.keysOf(_class);
+	// var _classValues = fujon.core.valuesOf(_class);
 	var _finalClass = false;
 	var primitive = fujon.core.Primitive();
 
@@ -144,18 +127,31 @@ fujon.core.Class = function() {
 				if (_finalClass)
 					throw new Error('Final Class cannot be extended !');
 				console.log('class extend -> ');
-				
+
 				subclass.prototype = option.extend.prototype;
 				primitive.prototype = new subclass;
+
+				primitive._superClass = option.extend.prototype;
 				
+<<<<<<< HEAD
 				for(var property in primitive.prototype){
 					if(typeof property === 'function'){}
 					//primitive.prototype[property] = primitive.prototype[property].bind(primitive);
 				}
+=======
+>>>>>>> f9aaea1baaf2009e1b42064bd5919a418376431f
 				
-				primitive._superClass = option.extend.prototype;
-				primitive.prototype._super = function(){};
+				/*for ( var property in primitive.prototype) {
+					console.log('--------> '+property)
+					if (typeof primitive.prototype[property] === 'function') {
+						primitive.prototype[property] = subclass.prototype[property].bind(primitive.prototype);
+					}
+				}*/
 				
+				primitive.prototype._super = function() {
+					
+				};
+
 				break;
 			case 'implement':
 				for ( var property_to_override in option.implement.prototype) {
@@ -167,11 +163,12 @@ fujon.core.Class = function() {
 			}
 		}
 	}
-	
+
 	primitive.addProperty = addProperty;
 	primitive.addProperty(_class);
 
 	function addProperty(object) {
+<<<<<<< HEAD
   
 		var parent = this._superClass ; //&& this._superClass.prototype ;
 		if(parent && parent._super)console.log('parent have super');
@@ -201,42 +198,70 @@ fujon.core.Class = function() {
 				console.log('add parent property -> _super.'+property);
 				this.prototype._super[property] = function(){
 					console.log('call parent '+property);
+=======
+		var parent = this._superClass; // && this._superClass.prototype ;
+		if (parent && parent._super)
+			console.log('parent have super');
+		var context = parent && parent._super ? parent.prototype : primitive.prototype;
+		var contextHistory = [] ;
+		console.log('Have parent ? ->');
+		console.log(parent);
+
+		for ( var property in object) {
+			var value = object[property];
+			if (parent != undefined && parent[property] != undefined && property != 'constructor') {
+				console.log('add parent property -> _super.' + property);
+				this.prototype._super[property] = function() {
+					console.log('call parent ' + property);
+>>>>>>> f9aaea1baaf2009e1b42064bd5919a418376431f
 					console.log(context);
-					return parent[property].apply(context,arguments);
+					return parent[property].apply(context, arguments);
 				};
 			}
+<<<<<<< HEAD
 			console.log('add property : '+property);
 			this.prototype[property] = value ;
 		} */
+=======
+			console.log('add property : ' + property);
+			this.prototype[property] = value;
+		}
+>>>>>>> f9aaea1baaf2009e1b42064bd5919a418376431f
 		
-		if(parent && parent._super){
-			for(var sp in parent._super){
-				console.log('parent is subclass and have this property -> '+sp);
-				if(sp != 'constructor')
-				this.prototype._super[sp] = function(){
-					console.log('call super parent '+property);
-					console.log(parent._super);
-					return parent[sp].apply(context,arguments);
-				};
+		contextHistory.push(context);
+
+		if (parent && parent._super) {
+			for ( var sp in parent._super) {
+				console.log('parent is subclass and have this property -> '
+						+ sp);
+				if (sp != 'constructor')
+					this.prototype._super[sp] = function() {
+						console.log('call super parent ' + property);
+						console.log(parent._super);
+						return parent[sp].apply(context, arguments);
+					};
 			}
 		}
-		
-		
-		if(this.prototype._super != undefined){
+
+		if (this.prototype._super != undefined) {
 			console.log('super ok');
-			this.prototype._super.constructor = function(){
+			var instance = this.prototype ;
+			this.prototype._super.constructor = function() {
 				console.log('call super constructor');
 				console.log(context);
-				return parent.constructor.apply(context,arguments);
+				if(this.context)console.log('gia chiamato');
+				var r = parent.constructor.apply(this.context, arguments);
+				this.context = instance ;
+				return r ;
 			};
 		};
 	};
 
 	primitive.prototype.constructor = _class.constructor;
-	delete primitive.addProperty ; //this is dangerous ! 
+	delete primitive.addProperty; // this is dangerous !
 	console.log('*************PRIMITIVE****************');
-	for(var p in primitive){
-		console.log('-> '+p);
+	for ( var p in primitive) {
+		console.log('-> ' + p);
 	}
 	console.log('*************PRIMITIVE****************');
 	return primitive;

@@ -39,37 +39,5 @@ function main() {
 }
 //******************************
 
-var Point = fujon.core.Class({
-	constructor:function(x,y){
-		this.x = x ;
-		this.y = y ;
-	},
-	getX:function(){
-		return this.x ;
-	},
-	getY:function(){
-		return this.y ;
-	}
-});
 
-var Axis = fujon.core.Class({extend:Point},{
-	constructor:function(x,y,z){
-		this._super.constructor(x,y);
-		this.z = z ;
-	},
-	getX:function(){
-		this._super.getX();
-	},
-	getZ:function(){
-		return this.z ;
-	}
-});
-
-var p0 = new Point(1,2);
-//var p1 = new Point(3,4);
-
-var a0 = new Axis(10,20,30);
-//var a1 = new Axis(40,50,60);
-
-console.log(a0.getX());
 
