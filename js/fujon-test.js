@@ -38,33 +38,38 @@ function main() {
 	log.l(test);
 }
 //******************************
-var A = fujon.core.Class({
-	constructor:function(a){
-		console.log('const di A');
-		this.x = a ;
+
+var Point = fujon.core.Class({
+	constructor:function(x,y){
+		this.x = x ;
+		this.y = y ;
 	},
-	foo:function(){
-		console.log('A foo : '+this.x);
+	getX:function(){
+		return this.x ;
+	},
+	getY:function(){
+		return this.y ;
 	}
 });
 
-var B = fujon.core.Class({extend:A},{
-	constructor:function(a){
-		console.log('const di B');
-    this._super.constructor(a);
+var Axis = fujon.core.Class({extend:Point},{
+	constructor:function(x,y,z){
+		this._super.constructor(x,y);
+		this.z = z ;
 	},
-	foo:function(){
-    console.log('B foo');
-    this._super.foo();
+	getX:function(){
+		this._super.getX();
+	},
+	getZ:function(){
+		return this.z ;
 	}
 });
 
-var C = fujon.core.Class({extend:B},{
-  constructor:function(a){
-    console.log('const di C');
-    this._super.constructor(a);
-  }
-});
-var a = new C(1000);
-//A.foo();
-a.foo();
+var p0 = new Point(1,2);
+//var p1 = new Point(3,4);
+
+var a0 = new Axis(10,20,30);
+//var a1 = new Axis(40,50,60);
+
+console.log(a0.getX());
+
