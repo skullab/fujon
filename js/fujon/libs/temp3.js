@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 var fujon = {
   core: {}
 };
@@ -32,7 +32,7 @@ fujon.core.Class = function(){
 };
 
 
-=======
+
 var fujon = {
 	core : {}
 }
@@ -160,7 +160,9 @@ fujon.core.Class = function() {
 		if(c)return c ;
 		return false;
 	};
-	
+  
+	function _static(){};
+  
 	// call super constructor
 	function _super() {
 		log('call super');
@@ -226,10 +228,17 @@ fujon.core.Class = function() {
 
 	// inflate values into primitive
 	function inflate(obj) {
-		var stamp = [];
+		var stamp = [] , value ;
 		for ( var p in obj) {
+      value = obj[p] ;
 			stamp.push(p);
-			var value = obj[p];
+      if(/static_/.exec(p)){
+        p = p.replace('static_',''); 
+        this[p] = value ;
+        log('_static',this._static,p);
+        this._static[p] = value ;
+        this.prototype._static[p] = value ;
+      }
 			this.prototype[p] = value;
 		}
 		log('inflate primitive', '-> ' + stamp);
@@ -271,7 +280,9 @@ fujon.core.Class = function() {
 				break;
 			}
 		}
-
+    
+    this._static = function(){} ;
+    this.prototype._static = this._static ;
 		this.inflate(c);
 		log('END CLASS ENGINE', 'ls');
 		return this;
@@ -280,9 +291,21 @@ fujon.core.Class = function() {
 };
 
 fujon.core.Interface = function(obj){
-	var _interface = fujon.core.Class({});
-	for(var p in obj){
-		_interface.prototype[p] = obj[p] ;
-	}
+  var _interface = {} ;
+  var _interfaceLength = 0 ;
+  for(var p in obj){
+    if(typeof obj[p] !== 'function')throw new Error('The properties of Interface can be only functions');
+    _interface[p] = obj[p] ;
+    _interfaceLength++ ;
+  }
+  return function(obj){
+    var objLength = 0 ;
+    if(!obj)throw new Error('The interface can not be empty');
+    for(var p in obj)objLength++;
+    for(var p_to_over in _interface){
+      if(!obj.hasOwnProperty(p_to_over))throw new Error('You must implement the method : ' + p);
+    }
+    if(objLength != _interfaceLength)throw new Error('You must implement all and only method of interface');
+  }
 };
->>>>>>> f9aaea1baaf2009e1b42064bd5919a418376431f
+
